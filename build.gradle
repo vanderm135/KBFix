@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT"
+    }
+}
+
+apply plugin: "forge"
+
+version = "1.0.0"
+group = "com.example.velocityannouncer"
+archivesBaseName = "kbfix"
+
+minecraft {
+    version = "1.7.10-10.13.4.1614-1.7.10"
+}
+
+sourceSets {
+    main {
+        java {
+            // Retain the unused starter-template files without packaging its incomplete mod.
+            exclude "com/myname/mymodid/**"
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": project.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}
+
+// ForgeGradle 1.2 hard-codes Mojang download URLs that no longer exist. Use
+// locally supplied, SHA-verified 1.7.10 client and server JARs instead.
+tasks.downloadClient.actions.clear()
+tasks.downloadClient.doLast {
+    copy {
+        from file('1.7.10.jar')
+        into tasks.downloadClient.output.parentFile
+        rename { 'minecraft-1.7.10.jar' }
+    }
+}
+
+tasks.downloadServer.actions.clear()
+tasks.downloadServer.doLast {
+    copy {
+        from file('1.7.10-server.jar')
+        into tasks.downloadServer.output.parentFile
+        rename { 'minecraft_server-1.7.10.jar' }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "FMLCorePlugin": "com.example.velocityannouncer.core.KnockbackFixCorePlugin",
+                "FMLCorePluginContainsFMLMod": "true",
+                "ForceLoadAsMod": "true"
+        )
+    }
+}
