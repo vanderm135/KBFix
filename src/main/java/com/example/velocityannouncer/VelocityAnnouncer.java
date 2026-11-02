@@ -9,7 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
         version = VelocityAnnouncer.VERSION, acceptableRemoteVersions = "*")
 public final class VelocityAnnouncer {
     public static final String MOD_ID = "velocityannouncer";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.2";
 
     @Mod.EventHandler
     public void onInitialize(FMLInitializationEvent event) {
